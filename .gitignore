@@ -1,0 +1,9 @@
+# Ignore virtual environment folder
+venv/
+# Ignore other common files
+*.pyc
+__pycache__/
+instance/
+.DS_Store
+# Include migration files
+!migrations/
