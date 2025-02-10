@@ -10,13 +10,16 @@ def add_product_controller():
     logger.info("trying to create product...")
     try:        
         data = request.get_json()
-        new_product = Product(name=data["name"], price=data["price"],category=data['category'],
-        manufacturer=data["manufacturer"])
+        logger.info(f"create product data: {data}")
+        new_product = Product(name=data['name'], price=data['price'],category=data['category'],
+        manufacturer=data['manufacturer'])
         new_stock = Stock(quantity=0,product_id=new_product.id)
         new_product.stock = new_stock
         new_product.save()
         logger.info("product created successfully!")
-        return jsonify({'success':True,"data":{'product_id': new_product.id}}), 201
+        prodcut_data={'product_id': new_product.id,'name':new_product.name}
+        logger.info(f"prodcut data created: {prodcut_data}")
+        return jsonify({'success':True,'data': prodcut_data}), 201
     except Exception as e:
         logger.error(f"create product failed with an error: {e}")
         return jsonify({'success':False,'error': str(e)}), 500
@@ -70,7 +73,7 @@ def delete_product_controller(id):
             db.session.delete(product)
             db.session.commit()
             logger.info("product deleted successfully!")
-            return jsonify({'success':True,'message': "product deleted"}), 200
+            return jsonify({'success':True,'message': "product deleted"}), 204
         else:
             logger.error("product not found")
             return jsonify({'success':False,'error': "product not found"}), 404

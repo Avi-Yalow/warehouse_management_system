@@ -16,7 +16,7 @@ def get_stock_level(product_id):
     return get_stock_level_controller(product_id)
 
 
-@stock_bp.route('/belowthreshold', methods=['GET'])
+@stock_bp.route('/below-threshold', methods=['GET'])
 def get_below_threshold():
     return get_below_threshold_controller()
 

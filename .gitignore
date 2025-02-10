@@ -1,4 +1,5 @@
 venv/
+tests/reports
 *.pyc
 __pycache__/
 instance/
@@ -6,3 +7,4 @@ instance/
 warehouse.log
 .env
 .gitignore
+scripts.txt
