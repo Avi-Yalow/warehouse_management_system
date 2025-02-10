@@ -1,26 +1,60 @@
 # warehouse_management_system
 
-add .env file:
+## 1. Environment Setup
+
+Create a `.env` file in the root directory with the following configurations:
+
+```
 DATABASE_URL=<ypur DB URL>
 BASE_URL=<your base URL>
+HOST=<app host>
+PORT=<host port>
+```
 
 
-add virtual enviarement:
+## 2.Virtual Environment
+
+Create and activate a virtual environment:
+```
 python -m venv venv
 venv\Scripts\activate
 
-insatll packages:
+```
+
+## 3.Installation
+
+Install required packages:
+```
 pip install -r requirements.txt
+```
+## 4. Database Migration
 
 migarte files:
+
+```
 flask db init
 
-if make any changes in tables:
+#if making any changes in tables:
 flask db migrate
 flask db upgrade
+```
 
+## Running the Application
 run app:
+```
 python run.py
+```
+
+## Testing
 
 to run tests:
+
+```
 pytest
+```
+##  API Documentation
+
+docs for the endpoints:
+```
+http://<host>:<port>/docs
+```
