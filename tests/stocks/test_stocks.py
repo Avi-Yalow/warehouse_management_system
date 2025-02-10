@@ -39,23 +39,22 @@ class TestStocks:
         """Fixture to provide sample stock data"""
         return {"quantity": 20}
     
-    @pytest.fixture
-    def created_stock(self, api_client,created_product, sample_stock_data):
-        """Fixture to create a test stock and clean up after"""
-        product_id = created_product.get('product_id',None)
-        response = api_client.post(
-            f"/api/stocks/add/{product_id}",
-            data=sample_stock_data
-        )
-        stock = response.json()
-        yield stock
-        # Cleanup
-        api_client.post(f"/api/stocks/remove/{product_id}",data=sample_stock_data)
-
     def test_get_all_stocks(self, api_client):
         """Test retrieving all stocks"""
         response = api_client.get(f"/api/stocks")
         assert response.status_code == 200
+        data = response.json()
+        assert data['success'] is True
+        assert isinstance(data['data'], list)
+
+    def test_get_below_threshold(self, api_client):
+        """Test retrieving all stocks"""
+        response = api_client.get(f"/api/stocks/below-threshold")
+        assert response.status_code == 200
+
+        data = response.json()
+        assert data['success'] is True
+
         assert isinstance(response.json()['data'], list)
 
     def test_get_single_stock(self, api_client,created_product):
@@ -64,7 +63,11 @@ class TestStocks:
             f"/api/stocks/{created_product['product_id']}"
         )
         assert response.status_code == 200
-        assert response.json()['data']['quantity'] == 0
+
+        data = response.json()
+        assert data['success'] is True
+
+        assert data['data']['quantity'] == 0
 
     def test_add_stock(self, api_client, created_product,sample_stock_data):
         """Test creating a new stock entry"""
@@ -72,7 +75,11 @@ class TestStocks:
             f"/api/stocks/{created_product['product_id']}"
         )
         assert response.status_code == 200
-        stock_before= response.json()['data']['quantity']
+
+        data = response.json()
+        assert data['success'] is True
+
+        stock_before= data['data']['quantity']
 
         #adding stock
         response = api_client.post(
@@ -80,10 +87,14 @@ class TestStocks:
             data=sample_stock_data
         )
         assert response.status_code == 200
-        assert response.json()['data']['quantity'] == stock_before+sample_stock_data['quantity']
+
+        data = response.json()
+        assert data['success'] is True
+
+        assert data['data']['quantity'] == stock_before+sample_stock_data['quantity']
         
         # Cleanup
-        product_id = response.json()['data']['product_id']
+        product_id = data['data']['product_id']
         api_client.post(f"/api/stocks/remove/{product_id}",data=sample_stock_data)
 
    
@@ -95,7 +106,11 @@ class TestStocks:
             f"/api/stocks/{created_product['product_id']}"
         )
         assert response.status_code == 200
-        stock_before= response.json()['data']['quantity']
+
+        data = response.json()
+        assert data['success'] is True
+
+        stock_before= data['data']['quantity']
 
         #adding quantity
         response = api_client.post(
@@ -103,9 +118,18 @@ class TestStocks:
             data=sample_stock_data
         )
         assert response.status_code == 200
+
+        data = response.json()
+        assert data['success'] is True
+
         after_adding= stock_before + sample_stock_data['quantity']
 
         # remove quantity
         response=api_client.post(f"/api/stocks/remove/{product_id}",data=sample_stock_data)
         assert response.status_code == 200
-        assert response.json()['data']['quantity']==after_adding-sample_stock_data['quantity']
+
+        data = response.json()
+        assert data['success'] is True
+
+        assert data['data']['quantity']==after_adding-sample_stock_data['quantity']
+

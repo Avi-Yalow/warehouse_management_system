@@ -77,19 +77,22 @@ def get_stock_level_controller(product_id):
 
 def get_below_threshold_controller():
     """List products below minimum threshold"""
-    try:
-        # Join Product and Stock tables to get products below threshold
-        products_below_threshold = (
-            Product.query
-            .join(Stock)
-            .filter(Stock.quantity < Product.min_stock_threshold)
-            .all()
-        )
-        
-        result = []
-        for product in products_below_threshold:
-            product_data = product.data
-            result.append(product_data)
+    try: 
+        products_below_threshold=(db.session.query(
+            Product.id,
+            Product.name,
+            Stock.quantity)
+        .join(Stock)
+        .filter(Stock.quantity < Product.min_stock_threshold)
+        .all())
+
+        result = [
+        { "product_id":product_id,
+         "product_name":product_name,
+         "quantity":quantity 
+        }
+        for product_id,product_name,quantity in products_below_threshold   
+        ]
         
         return jsonify({'success':True, 'data':result}), 200
     except Exception as e:

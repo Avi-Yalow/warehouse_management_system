@@ -73,10 +73,10 @@ def delete_product_controller(id):
             db.session.delete(product)
             db.session.commit()
             logger.info("product deleted successfully!")
-            return jsonify({'success':True,'message': "product deleted"}), 204
+            return jsonify({'success':True,'message': 'product deleted'}), 202
         else:
             logger.error("product not found")
-            return jsonify({'success':False,'error': "product not found"}), 404
+            return jsonify({'success':False,'error': 'product not found'}), 404
     except Exception as e:
         logger.error(f"delete product failed with error: {e}")
         return jsonify({'success':False,'error': str(e)}), 500
