@@ -67,7 +67,7 @@ class TestWarehouse:
             assert first_item['status'] in ['LOW STOCK', 'OK']
     
     
-    def test_generate_low_stock_report(self, api_client, base_url):
+    def test_generate_low_stock_report(self, api_client):
         """Test generating low stock report"""
         response = api_client.get(f"/api/warehouse/reports/low-stock")
         
