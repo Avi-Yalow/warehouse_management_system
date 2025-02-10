@@ -6,7 +6,7 @@ class Product(db.Model):
     name = db.Column(db.String(80), nullable=False)
     price = db.Column(db.Float, nullable=False)
     category = db.Column(db.String(50), nullable=False)
-    manufacturer  = db.Column(db.String(100), nullable=False)
+    manufacturer  = db.Column(db.String(50), nullable=False)
     min_stock_threshold = db.Column(db.Integer, default=10)
     created_at= db.Column(db.DateTime(),nullable=False,server_default=db.func.now())
     updated_at= db.Column(db.DateTime(),nullable=False,server_default=db.func.now(),onupdate=db.func.now())

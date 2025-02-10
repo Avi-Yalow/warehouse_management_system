@@ -16,7 +16,7 @@ def add_product_controller():
         new_product.stock = new_stock
         new_product.save()
         logger.info("product created successfully!")
-        return jsonify({'success':True,'product_id': new_product.id}), 201
+        return jsonify({'success':True,"data":{'product_id': new_product.id}}), 201
     except Exception as e:
         logger.error(f"create product failed with an error: {e}")
         return jsonify({'success':False,'error': str(e)}), 500

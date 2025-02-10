@@ -6,3 +6,4 @@ flask-restful
 python-dotenv
 pytest
 requests
+psycopg2

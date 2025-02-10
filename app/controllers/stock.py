@@ -88,3 +88,10 @@ def get_below_threshold_controller():
     except Exception as e:
         return jsonify({'success':False,'error': str(e)}), 500
     
+def get_all_stock_controller():
+    """Get stock levels for all products"""
+    try:
+        stocks = Stock.get_all()
+        return jsonify({'success':True,"data":stocks}), 200
+    except Exception as e:
+        return jsonify({'success':False,'error': str(e)}), 500
