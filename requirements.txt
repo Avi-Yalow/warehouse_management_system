@@ -8,3 +8,4 @@ pytest
 requests
 psycopg2
 pytest-html
+flask-restx
