@@ -58,3 +58,25 @@ docs for the endpoints:
 ```
 http://<host>:<port>/docs
 ```
+
+## Docker container
+To build and run the Docker container:
+ ### 1. Build the image:
+ ```
+ docker build -t flask-warehouse .
+ ```
+ ### 2. Run the container:
+ ```
+ docker run -p 5000:5000 \
+  --env-file .env \
+  flask-warehouse
+  ```
+  
+# To Run tests on-demand in a running container:
+  ```
+  # Build the image
+docker build -t flask-warehouse .
+
+# Run tests
+docker run flask-warehouse pytest tests/
+```
