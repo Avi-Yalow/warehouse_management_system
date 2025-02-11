@@ -4,7 +4,9 @@ from app.models.product import Product
 from app.models.stock import Stock
 from app.logger import Logger
 
+
 logger = Logger().get_logger()
+
 
 def add_product_controller():
     logger.info("trying to create product...")

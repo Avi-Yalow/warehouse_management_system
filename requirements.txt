@@ -1,6 +1,5 @@
 flask
 flask-SQLAlchemy
-# marshmallow
 flask-Migrate
 flask-restful
 python-dotenv

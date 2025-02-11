@@ -1,8 +1,11 @@
+import threading
 from app.extentions import db
 from flask import request,jsonify
+from app.models.operation import Operation
 from app.models.product import Product
 from app.models.stock import Stock
 from app.logger import Logger
+from app.workers.task_processor import process_task, task_queue
 
 logger = Logger().get_logger()
 
@@ -20,13 +23,25 @@ def add_stock_controller(product_id):
         if stock:
             # Update existing stock
             stock.quantity += data['quantity']
+            
+            operation = Operation(
+            operation_type="add",
+            product_id=product_id,
+            quantity=data['quantity']
+            )
+            db.session.add(operation)
+            db.session.commit()
+        
+            # Add task to queue
+            task_queue.put((operation.id, operation.operation_type, product_id, data["quantity"]))
+          
         else:
             # Create new stock entry
             stock = Stock(product_id=product_id, quantity=data['quantity'])
         stock.save()
         message=f"successfully added quantity: {stock.quantity} for product id: {product_id}"
         logger.info(message)
-        return jsonify({'success':True,'data':stock.data}), 200
+        return jsonify({'success':True,'data':stock.data,'status':operation.status}), 200
     except Exception as e:
         logger.error(f"add stock to product id- {product_id} failed with error: {e}")
         return jsonify({'success':False,'error': str(e)}), 500
@@ -57,7 +72,17 @@ def remove_stock_controller(product_id):
         stock.quantity -= data['quantity']
         stock.save()
         logger.info("successfully reduce a quantity")
-        return jsonify({'success':True, 'data':stock.data}), 200
+        operation = Operation(
+            operation_type="remove",
+            product_id=product_id,
+            quantity=data['quantity']
+            )
+        db.session.add(operation)
+        db.session.commit()
+        
+        # Add task to queue
+        task_queue.put((operation.id, operation.operation_type, product_id, data["quantity"]))
+        return jsonify({'success':True, 'data':stock.data,'status':operation.status}), 200
     except Exception as e:
         logger.info(f"error while reducing a quantity: {e}")
         return jsonify({'success':False,'error': str(e)}), 500
